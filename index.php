@@ -6,7 +6,6 @@
     <body>
         <?php
          session_start();
-
          function cleanDate($data){
             return htmlspecialchars(stripcslashes(trim($data)));
          }
@@ -50,19 +49,25 @@
             </form>
             ";
          }
-        //  getWishesForm();
-        displayWishes('Gift', 'Cat', 'Picture');
+        // displayWishes('Gift', 'Cat', 'Picture');
         if($_SERVER["REQUEST_METHOD"] == "POST"){
             if(isset($_POST['submitWishes'])){
                 $wish1 = cleanData($_POST['wish1']);
                 $wish2 = cleanData($_POST['wish2']);
                 $wish3 = cleanData($_POST['wish3']);
-            }  
-            if(preg_match('/[^a-zA-Z0-9 ]/', $wish1) || preg_match('/[^a-zA-Z0-9 ]/', $wish2) ||preg_match('/[^a-zA-Z0-9 ]/', $wish3)) {
+             
+            if(preg_match('/[^a-zA-Z0-9 ]/', $wish1) || preg_match('/[^a-zA-Z0-9 ]/', $wish2) || preg_match('/[^a-zA-Z0-9 ]/', $wish3)) {
                 echo('You have unwanted characters');
             }else{
-                $_SESSION['wishes'] = [$wish1, $wish2, $wish3]
-            }
+                if(!empty($wish1) || !empty($wish2) || !empty($wish3)){
+                    $_SESSION['wishes'] = [$wish1, $wish2, $wish3];
+                    print_r($_SESSION['wishes']);
+                    displayWishes();
+                }
+            } 
+            }    
+        }else{
+            getWishesForm();
         }
           ?>
     </body>

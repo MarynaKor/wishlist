@@ -58,9 +58,8 @@
             ";
             
          }
-
          function displayWishesAndAdress($errorMessage= '') {
-            echo"<h1> Wunschübersicht </h1>";
+            echo"<h1> Meine Lieferangaben </h1>";
             displayWishes();
             echo" 
             <br>
@@ -69,6 +68,7 @@
             <p>Telefon: ....." . $_SESSION['Adress'][2] . ".....</p><br>
             ";
          }
+
         if($_SERVER["REQUEST_METHOD"] == "POST"){
             if(isset($_POST['submitWishes'])){
                 $wish1 = cleanData($_POST['wish1']);
@@ -85,7 +85,7 @@
                         getWishesForm();
                     }
                 } 
-            }elseif(isset($_POST['submitAdress'])){
+            }else if(isset($_POST['submitAdress'])){
                 $fullName = cleanData($_POST['fullName']);
                 $secondAdressLine = cleanData($_POST['secondAdressLine']);
                 $phoneNumber = cleanData($_POST['phoneNumber']);

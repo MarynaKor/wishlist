@@ -70,7 +70,7 @@
             
          }
          function displayWishesAndAdress($errorMessage= '') {
-            echo"<h1> Meine Lieferangaben </h1>";
+            echo"<h1> Wunschübersicht </h1>";
             displayWishes();
             echo" 
             <br>

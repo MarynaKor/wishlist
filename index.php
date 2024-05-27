@@ -13,7 +13,7 @@
           function getWishesForm($errorMessage = '') {
             echo"<h1> Meine Wünsche </h1>";
             if ($errorMessage){
-                echo "<p>$errorMessage<p>";
+                echo "<p tyle='color: red '>$errorMessage<p>";
             }
             echo" <form method='post' action= ''>
             <label for= wish1> 1.Wunsch </label>
@@ -33,29 +33,40 @@
             <br>
             <p>1.Wunsch...... " . $_SESSION['wishes'][0] ." .....</p><br>
             <p>2.Wunsch...... " . $_SESSION['wishes'][1] ." .....</p><br>
-            <p>3.WUnsch...... " . $_SESSION['wishes'][2] ." .....</p><br>
+            <p>3.Wunsch...... " . $_SESSION['wishes'][2] ." .....</p><br>
             <br>
             ";
             
          }
-         function askAdress($errorMessage = '') {
+         function askAdress($errorMessage = '', $possition = 0) {
             echo"<h1> Meine Lieferangaben </h1>";
             displayWishes();
-            if ($errorMessage){
-                echo "<p>$errorMessage<p>";
-            }
+            if ($possition == 0){
+                echo "<p style='color: red'>$errorMessage<p>"; 
+                } 
+            echo" 
+            <form method='post' action= ''> 
+            <label for= fullName> Vor- und Nachname: </label> 
+            <input type='text' id='fullName' name='fullName'> <br> ";
+            if ($possition == 1){
+                echo "<p style='color: red'>$errorMessage<p>"; 
+                }  
             echo"
-            <form method='post' action= ''>
-            <label for= fullName> Vor- und Nachname: </label>
-            <input type='text' id='fullName' name='fullName'> <br>
-            <label for= secondAdressLine> PLZ und Ort:  </label>
-            <input type='text' id='secondAdressLine' name='secondAdressLine'> <br>
-            <label for= phoneNumber> Telefon: </label>
-            <input type='text' id='phoneNumber' name='phoneNumber'> <br>
-            <input type='submit' name='cancelAdress' value='Cancel'>
-            <input type='submit' name='submitAdress' value='Submit'>
-            </form>
-            ";
+            <label for= secondAdressLine> PLZ und Ort: </label>
+            <input type='text' id='secondAdressLine' name='secondAdressLine'>
+            <br>";
+            if ($possition == 2){
+                echo "<p style='color: red'>$errorMessage<p>"; 
+                }  
+            echo"
+            <label for= phoneNumber> Telefon: </label> 
+            <input type='text' id='phoneNumber' name='phoneNumber'> <br>";
+            if ($possition == 3){
+                echo "<p style='color: red'>$errorMessage<p>"; 
+                }  
+            echo"
+            <input type='submit' name='cancelAdress' value='Cancel'> 
+            <input type='submit' name='submitAdress' value='Submit'> </form> ";
             
          }
          function displayWishesAndAdress($errorMessage= '') {
@@ -75,33 +86,44 @@
                 $wish2 = cleanData($_POST['wish2']);
                 $wish3 = cleanData($_POST['wish3']);
              
-                if(preg_match('/[^a-zA-Z0-9 ]/', $wish1) || preg_match('/[^a-zA-Z0-9 ]/', $wish2) || preg_match('/[^a-zA-Z0-9 ]/', $wish3)) {
-                    echo('You have unwanted characters');
-                }else{
+                if(preg_match('/[^a-zA-Züöä ]/', $wish1) || preg_match('/[^a-zA-Züöä ]/', $wish2) || preg_match('/[^a-zA-Züöä ]/', $wish3)) {
+                    $errorMessage= 'Bitte benutze nur Buchstaben';
+                    getWishesForm($errorMessage);
+                    }else{
                     if(!empty($wish1) || !empty($wish2) || !empty($wish3)){
                         $_SESSION['wishes'] = [$wish1, $wish2, $wish3];
                         askAdress();
                     }else{
-                        getWishesForm();
+                        $errorMessage = 'Bitte gebe wenigstens einen Wunsch an!';
+                        getWishesForm($errorMessage);
                     }
                 } 
-            }else if(isset($_POST['submitAdress'])){
-                $fullName = cleanData($_POST['fullName']);
-                $secondAdressLine = cleanData($_POST['secondAdressLine']);
-                $phoneNumber = cleanData($_POST['phoneNumber']);
-                  if(preg_match('/[^a-zA-Z0-9 ]/', $fullName) || preg_match('/[^a-zA-Z0-9 ]/', $secondAdressLine) || preg_match('/[^a-zA-Z0-9 ]/', $phoneNumber)) {
-                    echo('You have unwanted characters');
-                    if(!empty($fullName) || !empty($secondAdressLine) || !empty($phoneNumber)){
+            }else if(isset($_POST['submitAdress'])){ 
+                $fullName = cleanData($_POST['fullName']); 
+                $secondAdressLine = cleanData($_POST['secondAdressLine']); 
+                $phoneNumber = cleanData($_POST['phoneNumber']); 
+                if(empty($fullName) || empty($secondAdressLine) || empty($phoneNumber)){
+                    $errorMessage = "Bitte fülle alle Felder";
+                    askAdress($errorMessage, 0);
+                }else{ 
+                    if (preg_match('/[^a-zA-Züäö ]/', $fullName)){
+                        $errorMessage = 'Gib einen validen Namen ein ohn Sonderzeichen'; 
+                        askAdress($errorMessage, 1); 
+                    }elseif(!preg_match('/^\d{5}\s[a-zA-Züöä\s]+$/', $secondAdressLine) ){
+                        $errorMessage = 'Bitte gebe einen vollständigen PLZ und Ort ein';
+                        askAdress($errorMessage, 2); 
+                    }elseif(preg_match('/[^0-9+ ]/', $phoneNumber)){
+                        $errorMessage = 'Bitte gebe ein gültige Nummer ein!';
+                        askAdress($errorMessage, 3);
+                    }else{ 
                         $_SESSION['Adress'] = [$fullName, $secondAdressLine, $phoneNumber];
-                        displayWishesAndAdress();
-                    }else{
-                        askAdress();
+                        displayWishesAndAdress(); 
                     }
-                }
-            }    
-        }else{
-            getWishesForm();
-        }
-          ?>
+                }  
+                }  
+            }else{
+                getWishesForm(); 
+            }
+        ?>
     </body>
 </html>

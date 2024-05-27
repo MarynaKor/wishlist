@@ -6,6 +6,7 @@
     <body>
         <?php
          session_start();
+
          function cleanData($data){
             return htmlspecialchars(stripcslashes(trim($data)));
          }
@@ -63,10 +64,9 @@
             displayWishes();
             echo" 
             <br>
-            
-            <p>Vor- und Nachname: ....." .$_SESSION['adress'][0]. ".....</p><br>
-            <p>PLZ und Ort: ....." .$_SESSION['adress'][1]. ".....</p><br>
-            <p>Telefon: ....." .$_SESSION['adress'][2]. ".....</p><br>
+            <p>Vor- und Nachname: ....." . $_SESSION['Adress'][0] . ".....</p><br>
+            <p>PLZ und Ort: ....." . $_SESSION['Adress'][1] . ".....</p><br>
+            <p>Telefon: ....." . $_SESSION['Adress'][2] . ".....</p><br>
             ";
          }
         if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -89,12 +89,12 @@
                 $fullName = cleanData($_POST['fullName']);
                 $secondAdressLine = cleanData($_POST['secondAdressLine']);
                 $phoneNumber = cleanData($_POST['phoneNumber']);
-                  if(preg_match('/[^a-zA-Z0-9 ]/', $fullName || preg_match('/^/', $secondAdressLine) || preg_match('/[^a-zA-Z0-9 ]/', $phoneNumber))) {
+                  if(preg_match('/[^a-zA-Z0-9 ]/', $fullName) || preg_match('/[^a-zA-Z0-9 ]/', $secondAdressLine) || preg_match('/[^a-zA-Z0-9 ]/', $phoneNumber)) {
                     echo('You have unwanted characters');
                     if(!empty($fullName) || !empty($secondAdressLine) || !empty($phoneNumber)){
                         $_SESSION['Adress'] = [$fullName, $secondAdressLine, $phoneNumber];
                         displayWishesAndAdress();
-                    }else {
+                    }else{
                         askAdress();
                     }
                 }
